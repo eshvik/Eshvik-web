@@ -711,5 +711,37 @@ padding:12px 15px;
 border-radius:50%;
 z-index:9999;
 ">💬</button>
+  <script>
+function toggleChat(){
+  const box = document.getElementById("chatbox");
+  box.style.display = box.style.display === "flex" ? "none" : "flex";
+}
+
+async function sendMsg(){
+  const input = document.getElementById("chatInput");
+  const msg = input.value;
+  if(!msg) return;
+
+  const chat = document.getElementById("chatMessages");
+
+  chat.innerHTML += "<div><b>You:</b> " + msg + "</div>";
+
+  input.value = "";
+
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ message: msg })
+  });
+
+  const data = await res.json();
+
+  chat.innerHTML += "<div><b>AI:</b> " + data.reply + "</div>";
+
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
 </body>
 </html>
